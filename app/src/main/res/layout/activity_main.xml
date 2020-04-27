@@ -38,38 +38,23 @@
 
     <Button
         android:id="@+id/btn_add_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="73dp"
+        android:layout_height="65dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/button_rounde"
-        android:text="新項目"
+        android:background="@drawable/plus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lv_items"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/btn_list_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/button_rounde"
-        android:text="清單"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lv_items"
-        tools:ignore="MissingConstraints" />
-
-    <Button
         android:id="@+id/scan_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="73dp"
+        android:layout_height="65dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/button_rounde"
-        android:text="進/出貨"
+        android:background="@drawable/repeat"
         app:layout_constraintStart_toEndOf="@+id/btn_add_item"
         app:layout_constraintTop_toBottomOf="@+id/lv_items"
         tools:ignore="MissingConstraints" />

@@ -41,7 +41,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button buttonAddItem;
-    Button buttonListItem;
+//    Button buttonListItem;
 
     //清單變數
     ListView listView;
@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonAddItem = findViewById(R.id.btn_add_item);
         buttonAddItem.setOnClickListener(this);
 
-        buttonListItem = findViewById(R.id.btn_list_item);
-        buttonListItem.setOnClickListener(this);
+//        buttonListItem = findViewById(R.id.btn_list_item);
+//        buttonListItem.setOnClickListener(this);
 
         listView = findViewById(R.id.lv_items);
         editTextSearchItem = findViewById(R.id.et_search);
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(getApplicationContext(),additem.class);
             startActivity(intent);
         }
-        if(v==buttonListItem){
-            Intent intent = new Intent(getApplicationContext(), ListItem.class);
-            startActivity(intent);
-        }
+//        if(v==buttonListItem){
+//            Intent intent = new Intent(getApplicationContext(), ListItem.class);
+//            startActivity(intent);
+//        }
 
     }
 
