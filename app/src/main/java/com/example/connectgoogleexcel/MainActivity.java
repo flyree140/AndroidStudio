@@ -11,12 +11,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.app.ProgressDialog;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -39,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     Button buttonAddItem;
 //    Button buttonListItem;
@@ -160,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 itemList[i][0] = itemId; //所有代號
                 itemList[i][1] = itemName; //所有品項名稱
+                itemList[i][4] = unitPrice;
                 itemList[i][5] = stafetyStock; //所有安全庫存
                 itemList[i][6] = count; //所有目前倉庫數量
 
@@ -169,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 item.put("category", category);
                 item.put("unitPrice", unitPrice);
                 item.put("stafetyStock", stafetyStock);
+                if ( Integer.parseInt(count) <= Integer.parseInt(stafetyStock)) {
+                    item.put("dangerous", "庫存危險");
+                }
                 item.put("count", count);
                 //新增的欄位要在這加入*** 3.將資料拋入清單中
                 list.add(item);
@@ -181,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         adapter = new SimpleAdapterForWarnColor(this,list,R.layout.list_item_row,
-                new String[]{"itemName","category","stafetyStock","count","unitPrice"},new int[]{R.id.tv_item_name,R.id.tv_category,R.id.tv_stafetyStock,R.id.tv_count});
+                new String[]{"itemName","category","stafetyStock","count","dangerous","unitPrice"},new int[]{R.id.tv_item_name,R.id.tv_category,R.id.tv_stafetyStock,R.id.tv_count,R.id.tv_dangerous});
         //新增的欄位要在這加入*** 4.new String[]{"itemName","category"} 拋入清單上(只是將資料放入) /new int[]{R.id.tv_item_name,R.id.tv_category} 要顯示的ID
 
 
@@ -226,6 +234,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //彈跳視窗，編輯進出/貨
     public void workZone() {
+        int IsExist = -1;
+
         for (int i = 0; i < itemList.length; i++) {
             if (ScanData.equals(itemList[i][0])) {
                 //進出貨區--------------------------------------
@@ -233,9 +243,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("進/出貨管理");
-                dialog.setMessage("品項名稱：" + ScanData);
+                dialog.setMessage("品項名稱：" + ScanData + "\n安全存量："+itemList[i][5]+ "\n預設單價："+itemList[i][4]);
+                //------------元件新增區-------------
                 final EditText input = new EditText(this);
-                dialog.setView(input);
+                final TextView calculate = new TextView(this);
+
+
+                //將要新增的元件addView入layout裡
+                LinearLayout layout = new LinearLayout(MainActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.addView(input);
+                layout.addView(calculate);
+                //--------------元件新增區--------------
+                dialog.setView(layout);
+                final int finalI2 = i;
+                input.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                        if (!input.getText().toString().trim().equals("")) {
+                            calculate.setText("試算：" + Integer.parseInt(itemList[finalI2][4]) * Integer.parseInt(input.getText().toString().trim()));
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+
                 //左邊按鈕
                 final int finalI1 = i;
                 dialog.setNeutralButton("進貨", new DialogInterface.OnClickListener() {
@@ -274,7 +315,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 Toast.makeText(this, itemList[i][0], Toast.LENGTH_LONG).show();
             }
-
         }
     }
 
@@ -314,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+        int socketTimeOut = 600000;// u can change this .. here it is 50 seconds
 
         RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(retryPolicy);

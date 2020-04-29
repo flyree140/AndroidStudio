@@ -6,20 +6,20 @@
         <!--rectangle 長方形 可以畫出直角形，圓角形，弧形等-->
         <shape android:shape="rectangle">
             <!--設定圓角，當設置的圓角半徑很大，就可變成弧形邊了-->
-            <corners android:radius="15dip" />
+            <corners android:radius="50dip" />
             <!--邊框-->
-            <stroke android:width="0dip" android:color="#538394" />
+            <stroke android:width="0dip" android:color="#0099CC" />
             <!--漸層顏色-->
             <gradient android:angle="-90" android:startColor="#0099CC" android:endColor="#017DAB"  />
         </shape>
     </item>
 
     <!-- 預設時 -->
-    <item android:color="@android:color/black">
+    <item android:color="@color/red">
         <shape android:shape="rectangle"  >
-            <corners android:radius="30dip" />
+            <corners android:radius="5dip" />
             <stroke android:width="0dip" android:color="#071E54" />
-            <gradient android:angle="-90" android:startColor="#E6E6F2" android:endColor="#E6E6F2"  />
+            <gradient android:angle="-90" android:startColor="@color/red" android:endColor="@color/red"  />
         </shape>
     </item>
 
