@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +31,17 @@ public class SimpleAdapterForWarnColor extends SimpleAdapter {
 //        int count = Integer.parseInt(map.get("count"));
 //        if(count - stafetyStock <= 0 )
 //          123
+        //===========================庫存百分比=====================================
+        NumberProgressBar npb = row.findViewById(R.id.number_progress_bar);
+        if (Integer.parseInt(map.get("count")) - Integer.parseInt(map.get("stafetyStock")) <= 0){
+            npb.setProgress(0);
+        }else if (Integer.parseInt(map.get("count")) - Integer.parseInt(map.get("stafetyStock")) >= 100){
+            npb.setProgress(100);
+        }else{
+            npb.setProgress(Integer.parseInt(map.get("count")) - Integer.parseInt(map.get("stafetyStock")));
+        }
+        //===========================庫存百分比=======================================
+
         if(Integer.parseInt(map.get("count")) - Integer.parseInt(map.get("stafetyStock")) <= 0)
         {
             // do something change color

@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +31,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -61,10 +64,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //掃描到的資料
     String ScanData;
+
+    NumberProgressBar npb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         buttonAddItem = findViewById(R.id.btn_add_item);
         buttonAddItem.setOnClickListener(this);
@@ -74,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         listView = findViewById(R.id.lv_items);
         editTextSearchItem = findViewById(R.id.et_search);
+
+        npb = findViewById(R.id.number_progress_bar);
+
         getItems();
 
         //掃描器建立
@@ -194,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 //        listView.setBackgroundColor(Color.argb(255,255,0,0));
-//        listView.setSelector(R.color.colorAccent); 點擊時背景顏色
+//        listView.setSelector(R.color.red); //點擊時背景顏色
         listView.setAdapter(adapter);
         loading.dismiss();
 
@@ -246,15 +256,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.setMessage("品項名稱：" + ScanData + "\n安全存量："+itemList[i][5]+ "\n預設單價："+itemList[i][4]);
                 //------------元件新增區-------------
                 final EditText input = new EditText(this);
+                input.setHint("數量");
+                final EditText dealPrice = new EditText(this);
+                dealPrice.setHint("當筆金額");
+                final EditText tradeDiscount = new EditText(this);
+                tradeDiscount.setHint("商業折扣 %");
                 final TextView calculate = new TextView(this);
-
 
                 //將要新增的元件addView入layout裡
                 LinearLayout layout = new LinearLayout(MainActivity.this);
                 layout.setOrientation(LinearLayout.VERTICAL);
+
+                layout.addView(dealPrice);
+                layout.addView(tradeDiscount);
                 layout.addView(input);
                 layout.addView(calculate);
-                //--------------元件新增區--------------
+                //--------------元件新增區------------
                 dialog.setView(layout);
                 final int finalI2 = i;
                 input.addTextChangedListener(new TextWatcher() {
@@ -265,8 +282,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                        float Discount = 1;
+                        if (!tradeDiscount.getText().toString().trim().equals("")){
+                            Discount -= Integer.parseInt(tradeDiscount.getText().toString().trim())*0.01;
+                        }
                         if (!input.getText().toString().trim().equals("")) {
-                            calculate.setText("試算：" + Integer.parseInt(itemList[finalI2][4]) * Integer.parseInt(input.getText().toString().trim()));
+                            if (!dealPrice.getText().toString().trim().equals("")){
+                                calculate.setText("試算(自行輸入)：" + Integer.parseInt(dealPrice.getText().toString().trim()) * Integer.parseInt(input.getText().toString().trim())*Discount);
+                            }else {
+                                calculate.setText("試算(預設金額)：" + Integer.parseInt(itemList[finalI2][4]) * Integer.parseInt(input.getText().toString().trim())*Discount);
+                            }
                         }
                     }
 
